@@ -24,10 +24,10 @@
 #   the dependencies of a shared object can be examined with `readelf -d foobar.so`
 
 # addition: creating *.so from *.a
-# those will libprinc_a.so libking_a.so,
-# they are supposed to be equivalent with libprinc.so and libdking.so
-# mind you, -fPIC at compilation in still necessary to build a shared object
-# on Linux, options --whole-archive, --no-whole-archive will do
+# those will be 'libprinc_a.so' and 'libking_a.so',
+# they are supposed to be equivalent with 'libprinc.so' and 'libdking.so'
+# mind you, -fPIC at compilation in still necessary to build a shared object.
+# On Linux, options --whole-archive, --no-whole-archive will do
 # on AIX, we create export-files
 # dependencies:
 #   main_a_so -> libprinc_a.so -> libking_a.so
