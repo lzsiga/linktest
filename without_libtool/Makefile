@@ -97,6 +97,9 @@ main_so: main.o libprinc.so libking.so
 main_soa: main.o libprinc_so.a libking_so.a
 	${CXX} -o $@ ${LDFLAGS} $^
 
+main_dl: main_dl.o
+	${CXX} -o $@ ${LDFLAGS} $^ -ldl
+
 ifeq  ($(PLATFORM),AIX)
 
 %.exp: %.a
