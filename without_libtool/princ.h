@@ -7,17 +7,12 @@
 
 class Princ: public King {
 public:
+    Princ(const char *pname);
+    virtual ~Princ();
     void intro() const;
-    virtual void virtIntro() const { intro(); }
+    virtual void virtIntro() const { intro(); };
+private:
+    char *name;
 };
-
-typedef Princ *Princ_Create_F();
-typedef void   Princ_Intro_F(Princ *);
-
-/* to use with dlopen/dlsym: */
-extern "C" {
-Princ_Create_F Princ_Create;
-Princ_Intro_F  Princ_Intro;
-}
 
 #endif

@@ -1,16 +1,21 @@
 /* princ.cc */
 
 #include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #include "princ.h"
 
 void Princ::intro() const {
-    fprintf(stderr, "I'm only descendant of the king (this=%p)\n", (void *)this);
-    ((King *)this)->intro();
+    fprintf(stderr, "Princ %s in only a sun of the king\n", this->name);
+/*  ((King *)this)->intro(); that's how we could call parent's intro */
 };
 
-/* to use with dlopen/dlsym: */
-extern "C" {
-Princ *Princ_Create () { return new Princ(); }
-void   Princ_Intro (Princ *self) { self->intro(); }
+Princ::Princ(const char *pname) {
+    this->name= strdup(pname);
+}
+
+Princ::~Princ() {
+    fprintf(stderr, "Princ %s terminates (this=%p)\n", this->name, this);
+    free (this->name);
 }

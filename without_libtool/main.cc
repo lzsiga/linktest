@@ -9,7 +9,7 @@ int main (void) {
     King Mathias;
     Mathias.intro();
 
-    Princ Leslie;
+    Princ Leslie("Leslie");
     Leslie.intro();
 
     King *leslie_as_baseclass= &Leslie;

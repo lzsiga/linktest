@@ -5,33 +5,42 @@
 #include <cstdlib>
 #include <dlfcn.h>
 
-#include "king.h"
-#include "princ.h"
+#include "king_dl.h"
+#include "princ_dl.h"
 
 static void    *e_dlopen(const char *name);
 static intptr_t e_dlsym(void *, const char *name);
 
 int main (void) {
-    void *libKing=  e_dlopen("libking.so");
-    void *libPrinc= e_dlopen("libprinc.so");
+    void *lib=  e_dlopen("libwrapper.so");
 
-    King_Create_F  *King_Create_FP=  (King_Create_F  *)e_dlsym(libKing,  "King_Create");
-    King_Intro_F   *King_Intro_FP=   (King_Intro_F   *)e_dlsym(libKing,  "King_Intro");
-    Princ_Create_F *Princ_Create_FP= (Princ_Create_F *)e_dlsym(libPrinc, "Princ_Create");
-    Princ_Intro_F  *Princ_Intro_FP=  (Princ_Intro_F  *)e_dlsym(libPrinc, "Princ_Intro");
+    King_Create_F   *King_Create_FP=   (King_Create_F   *)e_dlsym(lib, "King_Create");
+    King_Destroy_F  *King_Destroy_FP=  (King_Destroy_F  *)e_dlsym(lib, "King_Destroy");
+    King_Intro_F    *King_Intro_FP=    (King_Intro_F    *)e_dlsym(lib, "King_Intro");
+    Princ_Create_F  *Princ_Create_FP=  (Princ_Create_F  *)e_dlsym(lib, "Princ_Create");
+    Princ_Destroy_F *Princ_Destroy_FP= (Princ_Destroy_F *)e_dlsym(lib, "Princ_Destroy");
+    Princ_Intro_F   *Princ_Intro_FP=   (Princ_Intro_F   *)e_dlsym(lib, "Princ_Intro");
 
     King *Mathias= (*King_Create_FP)();
     (*King_Intro_FP)(Mathias);
 
-    Princ *Leslie= (*Princ_Create_FP)();
+    Princ *Leslie= (*Princ_Create_FP)("Leslie");
     (*Princ_Intro_FP)(Leslie);
 
     King *leslie_as_baseclass= Leslie;
-    printf("\ncalling intro (non-virtual method):\n");
-    leslie_as_baseclass->intro();
-    printf("\ncalling virtIntro (virtual method):\n");
+    printf("\ncalling King::intro (non-virtual method) on down-casted Princ:\n");
+    (*King_Intro_FP)(leslie_as_baseclass);
+
+    printf("\ncalling virtIntro (virtual method) on down-casted Princ:\n");
     leslie_as_baseclass->virtIntro();
 
+    (*King_Destroy_FP)(Mathias);
+    (*Princ_Destroy_FP)(Leslie);
+
+    /* in this example we have virtual destructors, so it could be simply:
+    delete Mathias;
+    delete Leslie;
+    */
     return 0;
 }
 

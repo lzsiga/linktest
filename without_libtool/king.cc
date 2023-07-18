@@ -8,7 +8,6 @@ void King::intro() const {
     fprintf(stderr, "I am the king (this=%p)\n", (void *)this);
 }
 
-extern "C" {
-King *King_Create () { return new King(); }
-void  King_Intro (King *self) { self->intro(); }
+King::~King() {
+    fprintf(stderr, "King at %p terminates\n", (void *)this);
 }
