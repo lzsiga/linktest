@@ -1,6 +1,6 @@
 /* main_dl.cc */
 
-#include <cstdint>
+#include <stdint.h>
 #include <cstdio>
 #include <cstdlib>
 #include <dlfcn.h>
