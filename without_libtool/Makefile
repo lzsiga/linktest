@@ -32,6 +32,29 @@
 # dependencies:
 #   main_a_so -> libprinc_a.so -> libking_a.so
 
+# addition: libwrapper.so which can be used as a plugin
+# main_dl only uses symbols loaded from 'libwrapper.so'
+# (and virtual methods that are called via the VMT)
+#
+# +--------------+
+# |  main_dl     |
+# +----+---------+
+#      | dlopen/dlsym
+#      v
+# +---------------+
+# | libwrapper.so |
+# +----+--------+-+
+#      | linked |
+#      | with   v
+#      |     +---------------+
+#      |     | libprinc.so   |
+#      |     +--+------------+
+#      |        |
+#      v        v
+# +---------------+
+# | libking.so    |
+# +---------------+
+
 AR  := /usr/bin/ar
 NM  := /usr/bin/nm
 CXX := c++ # it is the default
@@ -102,6 +125,9 @@ libwrapper.so: king_dl.o princ_dl.o libprinc.so libking.so
 
 main_dl: main_dl.o
 	${CXX} -o $@ ${LDFLAGS} $^ -ldl
+
+test_main_dl: main_dl libwrapper.so
+	./main_dl
 
 ifeq  ($(PLATFORM),AIX)
 
